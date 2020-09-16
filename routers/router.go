@@ -19,5 +19,10 @@ func InitRouter() *gin.Engine {
 	{
 		apiDemand.POST("/", api.AddDemand)
 	}
+
+	apiOss := gApi.Group("/oss")
+	{
+		apiOss.POST("/upload", api.UploadFile)
+	}
 	return r
 }

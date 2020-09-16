@@ -12,8 +12,18 @@ type Demand struct {
 	Photo string `gorm:"size:1024"`
 	// 价格,单位是分
 	Price uint
-	// 类型(0: 代吃 1:代做 2:代买)
+	// 类型(0: 代吃 1:代做)
 	Style uint
+	// 省
+	Province string
+	// 市
+	City string
+	//区
+	Area string
+	// 地址
+	Address string `gorm:"size:1024"`
+	// 热度
+	Heat uint `gorm:"default:0"`
 	// 创建人用户id
 	CreateUserId uint  `gorm:"default:null"`
 	Users        Users `gorm:"foreignKey:CreateUserId"`
