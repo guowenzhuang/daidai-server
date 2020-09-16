@@ -24,5 +24,11 @@ func InitRouter() *gin.Engine {
 	{
 		apiOss.POST("/upload", api.UploadFile)
 	}
+
+	apiUser := gApi.Group("/user")
+	{
+		apiUser.POST("/regist", api.AddUsers)
+		apiUser.POST("/login", api.Login)
+	}
 	return r
 }
