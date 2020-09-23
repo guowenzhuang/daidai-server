@@ -33,3 +33,12 @@ func AddDemand(demand Demand) bool {
 	DB.Create(&demand)
 	return true
 }
+func HomeRecommend() (demand []Demand) {
+	DB.Order("created_at desc").Limit(5).Find(&demand)
+	return
+}
+
+func Page(offset, limit int, name, order string) (demand []Demand) {
+	DB.Where("title LIKE ?", "%"+name+"%").Order(order).Offset(offset).Limit(limit).Preload("Users").Find(&demand)
+	return
+}

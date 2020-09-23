@@ -4,26 +4,26 @@ import (
 	"daidai-server/pkg/setting"
 	"daidai-server/routers"
 	"fmt"
-	"gorm.io/gorm"
-	"net/http"
+	"github.com/fvbock/endless"
+	"log"
+	"syscall"
 )
 
-type Test struct {
-	gorm.Model
-	Id   uint
-	Name string
-}
-
 func main() {
-	router := routers.InitRouter()
 
-	s := &http.Server{
-		Addr:           fmt.Sprintf(":%d", setting.HTTPPort),
-		Handler:        router,
-		ReadTimeout:    setting.ReadTimeout,
-		WriteTimeout:   setting.WriteTimeout,
-		MaxHeaderBytes: 1 << 2,
+	endless.DefaultReadTimeOut = setting.ReadTimeout
+	endless.DefaultWriteTimeOut = setting.WriteTimeout
+	endless.DefaultMaxHeaderBytes = 1 << 2
+	endPoint := fmt.Sprintf(":%d", setting.HTTPPort)
+
+	server := endless.NewServer(endPoint, routers.InitRouter())
+	server.BeforeBegin = func(add string) {
+		log.Printf("Actual pid is %d", syscall.Getpagesize())
 	}
 
-	s.ListenAndServe()
+	err := server.ListenAndServe()
+
+	if err != nil {
+		log.Printf("Server err: %v", err)
+	}
 }

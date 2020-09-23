@@ -7,16 +7,21 @@ import (
 )
 
 var (
-	Cfg          *ini.File
-	RunMode      string
-	HTTPPort     int
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
-	PageSize     int
-	JwtSecret    string
+	Cfg             *ini.File
+	RunMode         string
+	HTTPPort        int
+	ReadTimeout     time.Duration
+	WriteTimeout    time.Duration
+	PageSize        int
+	JwtSecret       string
+	AppId           string
+	AppSecret       string
+	CurrentUserInfo string
 )
 
 func init() {
+	CurrentUserInfo = "currentUserInfo"
+
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
 	if err != nil {
@@ -25,6 +30,7 @@ func init() {
 	LoadBase()
 	LoadServer()
 	LoadApp()
+	LoadOss()
 }
 
 func LoadBase() {
@@ -49,4 +55,15 @@ func LoadApp() {
 
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
 	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
+}
+
+func LoadOss() {
+	sec, err := Cfg.GetSection("wx")
+	if err != nil {
+		log.Fatalf("Fail to get section 'app': %v", err)
+	}
+
+	AppId = sec.Key("appId").MustString("")
+	AppSecret = sec.Key("appSecret").MustString("")
+
 }
